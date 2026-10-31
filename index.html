@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#05050b">
+  <meta name="description" content="SPELLBREAK — a minimalist pixel-art 1v1 duel of blade and arcane. Parry, cast, and ascend ten gates.">
+  <title>SPELLBREAK — A Pixel Duel of Blade &amp; Arcane</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2305050b'/%3E%3Cpath d='M8 24L23 9' stroke='%236ee7ff' stroke-width='3'/%3E%3Cpath d='M8 8l4 4M20 20l4 4' stroke='%23ff6bd6' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <canvas id="game" aria-label="SPELLBREAK duel arena" role="img"></canvas>
+    <div class="fx-overlay" id="fx-overlay" aria-hidden="true"></div>
+    <div class="scanlines" id="scanlines" aria-hidden="true"></div>
+
+    <!-- Fight HUD -->
+    <div class="hud is-hidden" id="hud" aria-hidden="true">
+      <div class="hud-top">
+        <div class="fighter-card is-player">
+          <div class="fighter-line"><span class="fighter-tag">YOU</span><span class="fighter-name" id="hud-player-name">VESPER</span></div>
+          <div class="bar hp-bar"><span class="bar-lag" id="hp-lag-p"></span><span class="bar-fill" id="hp-fill-p"></span><span class="bar-grid"></span></div>
+          <div class="bar mana-bar"><span class="bar-fill" id="mana-fill-p"></span></div>
+        </div>
+        <div class="hud-mid">
+          <span class="hud-stage" id="hud-stage">STAGE 01</span>
+          <span class="hud-diff" id="hud-diff">MEDIUM</span>
+        </div>
+        <div class="fighter-card is-enemy">
+          <div class="fighter-line"><span class="fighter-name" id="hud-enemy-name">THE WARDEN</span><span class="fighter-tag">FOE</span></div>
+          <div class="bar hp-bar"><span class="bar-lag" id="hp-lag-e"></span><span class="bar-fill" id="hp-fill-e"></span><span class="bar-grid"></span></div>
+          <div class="bar mana-bar"><span class="bar-fill enemy-glow"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="skillbar is-hidden" id="skillbar">
+      <div class="spell-slots" id="spell-slots"></div>
+      <div class="cd-row">
+        <div class="cd-chip" id="cd-parry"><span class="cd-icon">⛨</span><span class="cd-name">PARRY</span><kbd>L</kbd><i class="cd-fill"></i></div>
+        <div class="cd-chip" id="cd-dash"><span class="cd-icon">»</span><span class="cd-name">DASH</span><kbd>⇧</kbd><i class="cd-fill"></i></div>
+      </div>
+    </div>
+
+    <div class="combo" id="combo" aria-live="polite"><b id="combo-count">2</b><span>HIT</span></div>
+    <div class="toast" id="toast" role="status"></div>
+
+    <!-- Screens -->
+    <div id="screens">
+      <!-- TITLE -->
+      <section class="screen title-screen" id="screen-title" data-screen="title">
+        <div class="title-wash" aria-hidden="true"></div>
+        <header class="masthead">
+          <div class="brand"><span class="brand-rune">✦</span> SPELLBREAK <span class="brand-ver">1.0</span></div>
+          <div class="protocol"><i class="live-dot"></i> ARCANE DUEL PROTOCOL</div>
+        </header>
+
+        <div class="title-main">
+          <div class="title-copy">
+            <p class="eyebrow"><span class="eyebrow-line"></span> A PIXEL DUEL OF BLADE &amp; ARCANE</p>
+            <h1 class="logo">SPELL<br><span class="logo-accent">BREAK</span><span class="logo-dot">.</span></h1>
+            <p class="tagline">Parry the blade. Break the spell.</p>
+            <nav class="menu" aria-label="Main menu">
+              <button class="btn btn-primary" id="btn-play" aria-label="Play">
+                <span class="btn-main">PLAY</span>
+                <span class="btn-hint" id="play-hint">BEGIN THE ASCENT</span>
+              </button>
+              <button class="btn btn-menu" id="btn-new">NEW ASCENT <span class="btn-aside">RESET GATES</span></button>
+              <button class="btn btn-menu" id="btn-skills">SKILL TREE <span class="pip" id="title-points">3 SP</span></button>
+              <div class="menu-row">
+                <button class="btn btn-ghost" id="btn-settings">SETTINGS</button>
+                <button class="btn btn-ghost" id="btn-help">HOW TO PLAY</button>
+              </div>
+            </nav>
+            <div class="title-meta">
+              <span class="chip chip-diff" id="title-diff">MEDIUM</span>
+              <span>BEST <b id="title-best">STAGE 01</b></span>
+              <span>WINS <b id="title-wins">0</b></span>
+              <span>PARRIES <b id="title-parries">0</b></span>
+            </div>
+          </div>
+
+          <aside class="title-side" aria-label="Gate progression">
+            <div class="side-label">THE TEN GATES</div>
+            <ol class="gate-list" id="gate-list"></ol>
+            <div class="side-keys">
+              <div><kbd>J</kbd><span>STRIKE</span></div>
+              <div><kbd>K</kbd><span>BREAKER</span></div>
+              <div><kbd>L</kbd><span>PARRY</span></div>
+              <div><kbd>1</kbd><span>–</span><kbd>3</kbd><span>SPELLS</span></div>
+            </div>
+          </aside>
+        </div>
+
+        <footer class="title-foot">
+          <span>MINIMALIST COMBAT / MAXIMUM CONSEQUENCE</span>
+          <span class="foot-mid">ENTER TO PLAY</span>
+          <span>BUILD <span id="foot-build">1.0.0</span></span>
+        </footer>
+      </section>
+
+      <!-- DIFFICULTY -->
+      <section class="screen gate-screen" id="screen-difficulty" data-screen="difficulty">
+        <div class="panel-head">
+          <button class="back" id="diff-back" data-nav="title">← BACK</button>
+          <p class="panel-kicker">NEW ASCENT</p>
+          <span class="panel-note">Skills &amp; points persist</span>
+        </div>
+        <div class="diff-layout">
+          <div class="diff-copy">
+            <p class="eyebrow"><span class="eyebrow-line"></span> CHOOSE YOUR WEIGHT</p>
+            <h2 class="display">NAME THE<br>PRICE<span class="accent">.</span></h2>
+            <p class="body-copy">Every gate remembers how it was beaten. Choose the hand you want the dark to play.</p>
+            <p class="warn" id="diff-warning"></p>
+            <div class="diff-summary">
+              <span>STAGE <b>01</b></span>
+              <span>REWARD <b id="diff-reward">+3 SP</b></span>
+              <span>GATES <b>10 + ASCENSION</b></span>
+            </div>
+          </div>
+          <div class="diff-cards" id="diff-cards"></div>
+        </div>
+        <div class="gate-foot">
+          <span class="foot-note" id="diff-note">You can change difficulty by beginning a new ascent.</span>
+          <button class="btn btn-primary" id="btn-begin">BEGIN ASCENT</button>
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section class="screen skills-screen" id="screen-skills" data-screen="skills">
+        <div class="panel-head">
+          <button class="back" id="skills-back">← BACK</button>
+          <p class="panel-kicker">THE ASCENT</p>
+          <div class="sp-bank"><span>SKILL POINTS</span><b id="sp-points">0</b></div>
+        </div>
+        <div class="skills-layout">
+          <div class="skill-board-wrap">
+            <div class="skill-board" id="skill-board">
+              <svg class="skill-lines" id="skill-lines" aria-hidden="true"></svg>
+            </div>
+            <p class="board-note">RANKS ARE PERMANENT. POINTS ARE EARNED PER DUEL WON.</p>
+          </div>
+          <aside class="skill-detail" id="skill-detail">
+            <p class="detail-kicker">SELECT A DISCIPLINE</p>
+            <div class="detail-glyph" id="detail-glyph">✶</div>
+            <h3 id="detail-name">THE TREE</h3>
+            <p id="detail-desc">Eight disciplines. Spend the points you earn from victories to sharpen your duelist.</p>
+            <div class="detail-rank" id="detail-ranks"></div>
+            <div class="detail-effect" id="detail-effect">EARN <b>SP</b> BY WINNING DUELS.</div>
+            <button class="btn btn-primary is-disabled" id="btn-learn" disabled>SELECT A NODE</button>
+            <div class="arcana">
+              <p class="detail-kicker">ARCANA</p>
+              <div class="arcana-list" id="arcana-list"></div>
+            </div>
+          </aside>
+        </div>
+        <div class="gate-foot">
+          <button class="btn btn-ghost" id="btn-reset-skills">RESET TREE</button>
+          <span class="foot-note">Resetting refunds every spent point. Ranks are not lost by ascending.</span>
+          <button class="btn btn-primary" id="skills-done">CONTINUE</button>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="screen settings-screen" id="screen-settings" data-screen="settings">
+        <div class="panel-head">
+          <button class="back" id="settings-back">← BACK</button>
+          <p class="panel-kicker">VIDEO · AUDIO · DATA</p>
+          <span class="panel-note">Saved automatically</span>
+        </div>
+        <div class="settings-layout">
+          <section class="setting-col">
+            <h3 class="col-title"><span>01</span> VIDEO</h3>
+            <div class="setting-row">
+              <label>PIXEL SCALE</label>
+              <div class="seg" data-setting="resolution">
+                <button data-value="auto">AUTO</button><button data-value="sharp">SHARP</button><button data-value="balanced">BALANCED</button><button data-value="chunky">CHUNKY</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>EFFECTS</label>
+              <div class="seg" data-setting="effects">
+                <button data-value="low">LOW</button><button data-value="medium">MED</button><button data-value="high">HIGH</button><button data-value="ultra">ULTRA</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>FRAME LIMIT</label>
+              <div class="seg" data-setting="fps">
+                <button data-value="60">60</button><button data-value="120">120</button><button data-value="unlimited">UNCAPPED</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label>SCREEN SHAKE</label>
+              <button class="toggle" data-toggle="shake" aria-pressed="true"><i></i><span>ON</span></button>
+            </div>
+            <div class="setting-row">
+              <label>GLOW / BLOOM</label>
+              <button class="toggle" data-toggle="glow" aria-pressed="true"><i></i><span>ON</span></button>
+            </div>
+            <div class="setting-row">
+              <label>CRT SCANLINES</label>
+              <button class="toggle" data-toggle="scanlines" aria-pressed="false"><i></i><span>OFF</span></button>
+            </div>
+            <div class="setting-row">
+              <label>REDUCE FLASHES</label>
+              <button class="toggle" data-toggle="reduceFlashes" aria-pressed="false"><i></i><span>OFF</span></button>
+            </div>
+            <div class="setting-row">
+              <label>FULLSCREEN</label>
+              <button class="btn btn-small" id="btn-fullscreen">TOGGLE</button>
+            </div>
+          </section>
+
+          <section class="setting-col">
+            <h3 class="col-title"><span>02</span> AUDIO</h3>
+            <div class="slider-row">
+              <label for="vol-master">MASTER <b id="vol-master-val">80</b></label>
+              <input type="range" id="vol-master" data-volume="volume" min="0" max="100" value="80">
+            </div>
+            <div class="slider-row">
+              <label for="vol-sfx">EFFECTS <b id="vol-sfx-val">90</b></label>
+              <input type="range" id="vol-sfx" data-volume="sfx" min="0" max="100" value="90">
+            </div>
+            <div class="slider-row">
+              <label for="vol-music">MUSIC <b id="vol-music-val">45</b></label>
+              <input type="range" id="vol-music" data-volume="music" min="0" max="100" value="45">
+            </div>
+            <p class="col-note">All sound is synthesized in the browser. No downloads, no mute-by-default.</p>
+
+            <h3 class="col-title"><span>03</span> ACCESSIBILITY</h3>
+            <div class="setting-row">
+              <label>REDUCE MOTION</label>
+              <button class="toggle" data-toggle="reduceMotion" aria-pressed="false"><i></i><span>OFF</span></button>
+            </div>
+            <p class="col-note">Reduce motion softens camera punch and title animation. Reduce flashes caps bright full-screen hits.</p>
+
+            <h3 class="col-title"><span>04</span> RECORD</h3>
+            <div class="stat-grid">
+              <div><span>ASCENTS</span><b id="set-wins">0</b></div>
+              <div><span>DEFEATS</span><b id="set-losses">0</b></div>
+              <div><span>PARRIES</span><b id="set-parries">0</b></div>
+              <div><span>BEST COMBO</span><b id="set-combo">0</b></div>
+            </div>
+            <button class="btn btn-danger" id="btn-erase">ERASE ALL PROGRESS</button>
+            <p class="col-note" id="erase-note">This clears skill points, ranks, and gate progress.</p>
+          </section>
+        </div>
+        <div class="gate-foot">
+          <span class="foot-note">Keyboard: ESC pauses a duel or closes this panel.</span>
+          <button class="btn btn-primary" id="settings-done">DONE</button>
+        </div>
+      </section>
+
+      <!-- HELP -->
+      <section class="screen help-screen" id="screen-help" data-screen="help">
+        <div class="panel-head">
+          <button class="back" id="help-back">← BACK</button>
+          <p class="panel-kicker">THE DUELIST'S PRIMER</p>
+          <span class="panel-note">Ten gates await</span>
+        </div>
+        <div class="help-layout">
+          <div class="help-hero">
+            <p class="eyebrow"><span class="eyebrow-line"></span> READ THE BLADE, NOT THE BODY</p>
+            <h2 class="display">PARRY IS<br>THE <span class="accent">DOOR</span>.</h2>
+            <p class="body-copy">A parry turns a killing blow into a broken stance. The window is brief, the reward is total: no damage, a stagger, mana, and enough time to answer with steel or spell.</p>
+            <div class="warn">HOLD <b>S</b> TO GUARD. GUARD SHRUGS OFF CHIP DAMAGE — BREAKERS IGNORE IT.</div>
+          </div>
+          <div class="help-grid">
+            <article class="help-card">
+              <p class="detail-kicker">01 / BLADE</p>
+              <h4>STRIKE &amp; BREAK</h4>
+              <ul>
+                <li><kbd>J</kbd> / <kbd>Z</kbd><span>Light strike. Press again in recovery to chain three hits.</span></li>
+                <li><kbd>K</kbd> / <kbd>X</kbd><span>Heavy breaker. Slow, huge damage, breaks guard.</span></li>
+                <li><kbd>S</kbd> / <kbd>↓</kbd><span>Hold guard. Chip damage is reduced, but breakers punish it.</span></li>
+              </ul>
+            </article>
+            <article class="help-card">
+              <p class="detail-kicker">02 / ARCANE</p>
+              <h4>SPELLS</h4>
+              <ul>
+                <li><kbd>1</kbd><span><b>EMBER LANCE</b> — a fast burning projectile. Can be parried back.</span></li>
+                <li><kbd>2</kbd><span><b>FROST NOVA</b> — a close frost ring that chills and slows.</span></li>
+                <li><kbd>3</kbd><span><b>STORM SIGIL</b> — delayed lightning at a marked spot. Move.</span></li>
+              </ul>
+              <p class="micro">Frost unlocks after gate 2. Storm after gate 4. Mana regenerates; parries refund it.</p>
+            </article>
+            <article class="help-card">
+              <p class="detail-kicker">03 / MOTION</p>
+              <h4>FOOTWORK</h4>
+              <ul>
+                <li><kbd>A</kbd><kbd>D</kbd><span>Move. You face your opponent automatically.</span></li>
+                <li><kbd>SPACE</kbd><span>Jump. Aerials are legal.</span></li>
+                <li><kbd>SHIFT</kbd><span>Dash. Brief invulnerability, useful against sigils and lances.</span></li>
+              </ul>
+            </article>
+            <article class="help-card">
+              <p class="detail-kicker">04 / ASCENT</p>
+              <h4>PROGRESS</h4>
+              <ul>
+                <li><kbd>SP</kbd><span>Win duels to earn skill points. They persist forever.</span></li>
+                <li><kbd>10</kbd><span>Gates, two crowned bosses, then an endless ascension.</span></li>
+                <li><kbd>★</kbd><span>Defeat is not the end. Retry the gate with your ranks intact.</span></li>
+              </ul>
+              <p class="micro">Higher difficulty pays more SP. Touch controls appear automatically on phones and tablets.</p>
+            </article>
+          </div>
+        </div>
+        <div class="gate-foot">
+          <span class="foot-note">Tip: bait a heavy, parry the wind-up, then cast through the stagger.</span>
+          <button class="btn btn-primary" id="help-done">UNDERSTOOD</button>
+        </div>
+      </section>
+
+      <!-- VS -->
+      <section class="screen vs-screen" id="screen-vs" data-screen="vs">
+        <div class="vs-top">
+          <span id="vs-stage">STAGE 01</span>
+          <span id="vs-diff">MEDIUM</span>
+        </div>
+        <div class="vs-grid">
+          <div class="vs-fighter is-you">
+            <span class="vs-role">YOU</span>
+            <h2>VESPER</h2>
+            <p>THE UNWRITTEN</p>
+          </div>
+          <div class="vs-mark" aria-hidden="true">VS</div>
+          <div class="vs-fighter is-foe">
+            <span class="vs-role" id="vs-role">CHALLENGER</span>
+            <h2 id="vs-name">THE WARDEN</h2>
+            <p id="vs-title">KEEPER OF THE FIRST GATE</p>
+          </div>
+        </div>
+        <p class="vs-quote" id="vs-quote">“You carry a blade into a house of spells.”</p>
+        <div class="vs-foot">
+          <span id="vs-boss"></span>
+          <span class="vs-skip">CLICK TO SKIP</span>
+        </div>
+      </section>
+
+      <!-- RESULT -->
+      <section class="screen result-screen" id="screen-result" data-screen="result">
+        <div class="result-inner">
+          <p class="panel-kicker" id="result-kicker">GATE 01 CLEARED</p>
+          <h2 class="result-title" id="result-title">VICTORY</h2>
+          <p class="result-sub" id="result-sub">The Warden yields the gate.</p>
+          <div class="result-stats">
+            <div><span>TIME</span><b id="result-time">00:00</b></div>
+            <div><span>PARRIES</span><b id="result-parries">0</b></div>
+            <div><span>MAX COMBO</span><b id="result-combo">0</b></div>
+            <div><span>DAMAGE</span><b id="result-damage">0</b></div>
+          </div>
+          <div class="reward" id="result-reward">+3 SKILL POINTS</div>
+          <p class="result-note" id="result-note"></p>
+          <div class="result-actions">
+            <button class="btn btn-primary" id="btn-next">NEXT DUEL</button>
+            <button class="btn" id="btn-result-skills">SKILL TREE <span class="pip" id="result-points">3 SP</span></button>
+            <button class="btn btn-ghost" id="btn-result-title">TITLE</button>
+          </div>
+          <p class="result-hint" id="result-hint">ENTER FOR NEXT DUEL · ESC FOR TITLE</p>
+        </div>
+      </section>
+
+      <!-- PAUSE -->
+      <section class="screen pause-screen" id="screen-pause" data-screen="pause">
+        <div class="pause-card">
+          <p class="panel-kicker">DUEL SUSPENDED</p>
+          <h2 class="display">PAUSED<span class="accent">.</span></h2>
+          <div class="pause-actions">
+            <button class="btn btn-primary" id="btn-resume">RESUME</button>
+            <button class="btn" id="btn-pause-settings">SETTINGS</button>
+            <button class="btn" id="btn-pause-skills">SKILL TREE</button>
+            <button class="btn btn-ghost" id="btn-restart">RESTART DUEL</button>
+            <button class="btn btn-ghost" id="btn-quit">QUIT TO TITLE</button>
+          </div>
+          <div class="pause-keys">
+            <span><kbd>J</kbd> STRIKE</span><span><kbd>K</kbd> BREAK</span><span><kbd>L</kbd> PARRY</span><span><kbd>SHIFT</kbd> DASH</span><span><kbd>1–3</kbd> SPELLS</span>
+          </div>
+          <p class="pause-note">Skill purchases apply at the next duel.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Touch controls -->
+    <div class="touch is-hidden" id="touch" aria-hidden="true">
+      <div class="touch-move">
+        <button class="tbtn t-left" data-action="left" aria-label="Move left">◀</button>
+        <button class="tbtn t-right" data-action="right" aria-label="Move right">▶</button>
+        <button class="tbtn t-jump" data-action="jump" aria-label="Jump">▲</button>
+        <button class="tbtn t-dash" data-action="dash" aria-label="Dash">»</button>
+      </div>
+      <div class="touch-act">
+        <div class="touch-spells">
+          <button class="tbtn t-spell" data-action="spell1" data-spell="ember" aria-label="Ember Lance"><span>1</span>✦<i></i></button>
+          <button class="tbtn t-spell" data-action="spell2" data-spell="frost" aria-label="Frost Nova"><span>2</span>❄<i></i></button>
+          <button class="tbtn t-spell" data-action="spell3" data-spell="storm" aria-label="Storm Sigil"><span>3</span>⚡<i></i></button>
+        </div>
+        <div class="touch-buttons">
+          <button class="tbtn t-guard" data-action="guard" aria-label="Guard">GUARD</button>
+          <button class="tbtn t-parry" data-action="parry" aria-label="Parry">PARRY</button>
+          <button class="tbtn t-heavy" data-action="heavy" aria-label="Heavy breaker">BREAK</button>
+          <button class="tbtn t-strike" data-action="strike" aria-label="Strike">STRIKE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="rotate-hint" id="rotate-hint">ROTATE FOR THE FULL ARENA</div>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
