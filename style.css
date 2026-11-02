@@ -276,3 +276,66 @@ h1 i { margin-left: 8px; color: var(--faint); font: 12px var(--mono); font-style
   .action small { font-size: 6px; }
   .floor-state { max-width: 110px; text-align: right; line-height: 1.6; }
 }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.preference { display: inline-flex; align-items: center; }
+.preference select { max-width: 68px; padding: 5px 6px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: 8px var(--mono); letter-spacing: .06em; }
+.panel-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; padding: 5px; border: 1px solid var(--line); background: var(--surface-muted); }
+.panel-tab { display: flex; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 7px 3px; border: 1px solid transparent; background: transparent; color: var(--muted); }
+.panel-tab > span { font-size: 16px; line-height: 1; }
+.panel-tab small { font: 7px var(--mono); letter-spacing: .06em; }
+.panel-tab:hover { color: var(--ink); }
+.panel-tab.active { border-color: var(--line-strong); background: var(--surface); color: var(--gold); box-shadow: 0 1px 3px #202a260d; }
+.panel-tab:focus-visible { position: relative; z-index: 1; }
+.panel-pages { min-width: 0; }
+.panel-page { display: grid; gap: 11px; }
+.panel-page[hidden], .panel-page.hidden { display: none !important; }
+@media (max-width: 800px) {
+  .sidebar { display: flex; flex-direction: column; }
+  .panel-nav { position: sticky; z-index: 4; top: 0; }
+}
+@media (max-width: 520px) {
+  .top-right { gap: 7px; }
+  .preference select { max-width: 53px; padding: 5px 3px; font-size: 7px; }
+  .panel-tab { padding: 6px 2px; }
+  .panel-tab > span { font-size: 15px; }
+  .panel-tab small { font-size: 6px; }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #111411;
+  --surface: #1b201c;
+  --surface-muted: #222923;
+  --ink: #e4e9e2;
+  --muted: #a0aaa0;
+  --faint: #737e74;
+  --line: #303a32;
+  --line-strong: #414c43;
+  --gold: #d3ad68;
+  --gold-pale: #342d1e;
+  --green: #83b894;
+  --red: #df8375;
+  --blue: #8db4cc;
+}
+:root[data-theme="dark"] .action.primary,
+:root[data-theme="dark"] .continue,
+:root[data-theme="dark"] .modal-card button { background: #302a1e; }
+:root[data-theme="dark"] .scene-wrap { border-color: #3a453c; background: #202a23; }
+:root[data-theme="dark"] .vital-stack .bar,
+:root[data-theme="dark"] .bar.xp { background: #333c35; }
+:root[data-theme="dark"] .tower-visual { background: linear-gradient(150deg, #29312b, #202721); }
+:root[data-theme="dark"] .tower-visual::before,
+:root[data-theme="dark"] .tower-silhouette i { border-color: #48534a; background-color: #252e27; }
+:root[data-theme="dark"] .tower-copy b { color: #c1cba9; }
+:root[data-theme="dark"] .quest-icon,
+:root[data-theme="dark"] .npc-locked { background: var(--surface-muted); }
+:root[data-theme="dark"] .resident-card,
+:root[data-theme="dark"] .quest-card { background: #202721; }
+:root[data-theme="dark"] .panel-tab.active { box-shadow: 0 1px 3px #0005; }
+:root[data-theme="dark"] .service-actions button:hover:not(:disabled),
+:root[data-theme="dark"] .tonic-use:hover:not(:disabled),
+:root[data-theme="dark"] .travel-row button:hover,
+:root[data-theme="dark"] .resident-tools button:hover:not(:disabled),
+:root[data-theme="dark"] .quest-card button:hover:not(:disabled) { background: #3a3324; }
+
