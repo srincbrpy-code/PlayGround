@@ -16,3 +16,17 @@
 - 👤 [Explore the creator's projects](https://omgithub.com/srincbrpy-code).
 - 🌍 [Create with OMGithub](https://omgithub.com).
 <!-- omgithub:readme:end -->
+
+## Hollowvale
+
+A small, browser-playable MMORPG-inspired pixel-art prototype. Choose a Warden, Arcanist, or Ranger and wander Mosslight Meadow, fight mosslings, and earn levels and coins. The world is intentionally story-light and built around the idea of a long, player-led journey.
+
+### Play
+
+Open `index.html` in a modern browser. Choose a class and enter the meadow.
+
+- Move with **WASD** or **arrow keys** (touch D-pad on phones)
+- Strike with **Space** or skill **1**
+- Use a restorative draught with skill **2**
+
+This is a single-player prototype, not a networked MMO; the realm/player count is atmospheric UI.
