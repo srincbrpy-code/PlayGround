@@ -16,3 +16,13 @@
 - 👤 [Explore the creator's projects](https://omgithub.com/srincbrpy-code).
 - 🌍 [Create with OMGithub](https://omgithub.com).
 <!-- omgithub:readme:end -->
+
+## RIFTBOUND
+
+A browser-playable pixel-art battle royale about rival mages fighting inside a collapsing magical rift. Open `index.html` in a browser to play.
+
+- **WASD / arrow keys** to move; **mouse** to aim and hold to cast arcane bolts.
+- **Q** to blink; **E** to unleash an area-of-effect arcane nova.
+- Find glowing pickups, stay inside the shrinking rift, and be the last mage standing.
+- On touch screens, use the thumbstick and on-screen spell buttons.
+
