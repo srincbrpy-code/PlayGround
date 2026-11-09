@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#10121b" />
+  <title>Crypt of the Hollow King</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game-shell">
+    <div id="viewport" aria-label="3D dungeon game"></div>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Crypt of the Hollow King"><span class="brand-mark">✦</span><span>ASHEN<span class="brand-light">FALL</span></span></a>
+      <div class="location"><span class="location-dot"></span><span>THE SUNKEN CRYPT</span><i>·</i><span class="depth">DEPTH 03</span></div>
+      <div class="top-right"><span class="online-dot"></span><span>SOLO INSTANCE</span><button id="sound-btn" class="icon-btn" aria-label="Toggle sound" title="Toggle sound">♫</button><button id="help-btn" class="icon-btn" aria-label="Controls" title="Controls">?</button></div>
+    </header>
+    <section class="hero-panel">
+      <div class="avatar-row"><div class="avatar-icon">✧</div><div class="hero-info"><div class="hero-name">ELARA <span>THE WAYFARER</span></div><div class="level-line"><span>LEVEL <b id="level">07</b></span><div class="xp-track"><i id="xp-fill"></i></div><span class="xp-label" id="xp-label">320 / 500 XP</span></div></div></div>
+      <div class="stat-row"><span class="stat-symbol heart">♥</span><div class="meter"><div class="meter-fill health-fill" id="health-fill"></div><span id="health-label">100 / 100</span></div><span class="stat-name">VITALITY</span></div>
+      <div class="stat-row mana-row"><span class="stat-symbol">✦</span><div class="meter"><div class="meter-fill mana-fill" style="width:72%"></div><span>72 / 100</span></div><span class="stat-name">FOCUS</span></div>
+    </section>
+    <aside class="quest-card" id="quest-card"><div class="quest-kicker"><span>ACTIVE QUEST</span><span class="quest-star">✦</span></div><h2 id="quest-title">THE HOLLOW KING</h2><p id="quest-desc">Silence the ancient king<br />and escape the crypt.</p><div class="quest-progress"><span class="quest-check" id="quest-check">◌</span><span id="quest-objective">Defeat the Hollow King</span></div><div class="quest-reward"><span>REWARD</span><b>✧ &nbsp;800 XP <i>·</i> ◈ &nbsp;120 GOLD</b></div></aside>
+    <div class="boss-bar" id="boss-bar"><div class="boss-heading"><span class="boss-skull">☠</span><div><span class="boss-label">CRYPT LORD</span><span class="boss-name">THE HOLLOW KING</span></div><span id="boss-hp-text">900 / 900</span></div><div class="boss-track"><i id="boss-fill"></i></div></div>
+    <div class="objective-toast" id="toast"><span>✦</span><span id="toast-text">The dead stir in the darkness...</span></div>
+    <div class="bottom-left"><div class="resource-chip"><span class="coin">◈</span><b id="gold-count">45</b><span>GOLD</span></div><div class="resource-chip"><span class="shard">✧</span><b id="shard-count">2</b><span>SOUL SHARDS</span></div></div>
+    <div class="hotbar-wrap"><div class="hotbar-label"><span>ADVENTURER'S KIT</span><span>CLICK OR PRESS <b>1–4</b></span></div><div class="hotbar"><button class="slot active" data-slot="1"><span class="slot-icon potion-red">♜</span><small>1</small><span class="cooldown" id="potion-cooldown"></span></button><button class="slot" data-slot="2"><span class="slot-icon">⚔</span><small>2</small></button><button class="slot" data-slot="3"><span class="slot-icon spell">✧</span><small>3</small></button><button class="slot" data-slot="4"><span class="slot-icon">◉</span><small>4</small></button><div class="hotbar-sep"></div><button class="slot utility" id="map-toggle" title="Toggle map"><span class="slot-icon">⌖</span><small>M</small></button></div></div>
+    <div class="minimap-frame"><div class="map-title">CRYPT LEVEL <b>03</b></div><canvas id="minimap" width="140" height="140"></canvas><div class="map-legend"><i></i> YOU <i class="enemy-dot"></i> HOSTILE</div></div>
+    <div class="combat-feed" id="combat-feed"><div><i class="feed-gold">✦</i> The Hollow King awakens...</div></div>
+    <div id="interact-prompt" class="interact-prompt"><span class="keycap">E</span><span>OPEN ANCIENT CHEST</span></div>
+    <div class="touch-controls" id="touch-controls"><div class="dpad"><button data-move="up">▲</button><div><button data-move="left">◀</button><button data-move="down">▼</button><button data-move="right">▶</button></div></div><button id="touch-attack" class="touch-attack">⚔<span>STRIKE</span></button><button id="touch-heal" class="touch-heal">♜</button></div>
+    <div class="screen-cover" id="screen-cover"><div class="cover-card"><div class="cover-rune">✦</div><div class="cover-eyebrow">A SOLO DUNGEON ADVENTURE</div><h1 id="cover-title">THE HOLLOW<br /><em>KING</em></h1><p id="cover-copy">The old crypt has opened. Something ancient is waiting below.</p><button id="start-btn" class="start-btn"><span>ENTER THE CRYPT</span><b>→</b></button><div class="cover-controls"><span>WASD <i>MOVE</i></span><span>CLICK <i>ATTACK</i></span><span>SPACE <i>DODGE</i></span></div></div></div>
+    <div class="modal-backdrop" id="help-modal"><div class="help-card"><button class="close-modal" id="close-help">×</button><span class="modal-kicker">FIELD GUIDE</span><h2>Survive the crypt.</h2><div class="guide-row"><kbd>W A S D</kbd><span>Move through the dungeon</span></div><div class="guide-row"><kbd>CLICK / J</kbd><span>Strike the nearest enemy</span></div><div class="guide-row"><kbd>SPACE</kbd><span>Quick dodge — briefly invulnerable</span></div><div class="guide-row"><kbd>1 / Q</kbd><span>Drink a healing potion</span></div><div class="guide-row"><kbd>E</kbd><span>Open the treasure chest</span></div><p>Defeat the Hollow King to claim your reward. Enemies drop gold and experience.</p><button class="start-btn modal-ok" id="close-help-2">GOT IT <b>→</b></button></div></div>
+    <div class="level-up" id="level-up"><span>✧</span><b>LEVEL UP</b><small id="level-up-label">LEVEL 08</small></div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>

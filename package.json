@@ -1,0 +1,14 @@
+{
+  "name": "ashenfall-crypt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A lightweight 3D dungeon adventure.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --check game.js"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  }
+}
