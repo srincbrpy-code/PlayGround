@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090914">
+  <link rel="icon" href="data:,">
+  <title>VOID//SURVIVOR — Neon Protocol</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game" aria-label="Neon survivor arena game"></canvas>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Void Survivor home"><span class="brand-mark">V</span><span>VOID<span class="slash">//</span>SURVIVOR</span><small>NEON PROTOCOL</small></a>
+      <div class="run-stats"><span class="live-dot"></span><span id="wave-label">SECTOR 01</span><i></i><span id="clock">00:00</span></div>
+      <button id="pause-button" class="icon-button" aria-label="Pause game"><span>Ⅱ</span></button>
+    </header>
+    <section class="hud" aria-label="Game status">
+      <div class="player-card"><div class="portrait"><span>✦</span><b>01</b></div><div class="player-info"><div class="row"><b>ROGUE</b><span id="hp-text">100 / 100</span></div><div class="bar hp"><span id="hp-bar"></span></div><div class="row xp-row"><span>SYNC <b id="level-label">LV 01</b></span><span id="xp-label">0 / 30</span></div><div class="bar xp"><span id="xp-bar"></span></div></div></div>
+      <div class="right-hud"><div class="kill-counter"><span class="skull">✹</span><span id="kill-count">000</span><small>ELIMS</small></div><div class="mod-chip"><span>◈</span><div><small>ACTIVE MOD</small><b id="mod-label">OVERDRIVE</b></div></div></div>
+    </section>
+    <div class="boss-bar hidden" id="boss-bar"><span>☠</span><div><b>THE NULL WARDEN</b><div class="bar"><span id="boss-health"></span></div></div><small>BOSS</small></div>
+    <div class="bottom-hud"><div class="objective"><span class="objective-icon">⌖</span><div><small>OBJECTIVE</small><b>Survive the swarm</b></div></div><div class="weapon-pill"><span>⚡</span><div><small>WEAPON</small><b>ARC CASTER <em>LV. 1</em></b></div><span class="weapon-state">AUTO</span></div></div>
+    <div id="stick-zone" class="stick-zone"><div id="stick-base" class="stick-base"><div id="stick-knob" class="stick-knob"></div></div><span>MOVE</span></div>
+    <button id="dash-button" class="dash-button"><span>➤</span><small>DASH</small><i></i></button>
+    <div class="toast" id="toast"></div>
+    <section id="overlay" class="overlay">
+      <div class="overlay-card" id="overlay-card">
+        <div class="eyebrow"><span></span> ROGUELITE SURVIVAL / BUILD 0.9.4</div>
+        <h1>NEON<br><span>PROTOCOL</span></h1>
+        <p class="intro">The breach is spreading. Hold the line, harvest the signal, become the storm.</p>
+        <div class="feature-row"><div><span>✦</span><b>ENDLESS WAVES</b></div><div><span>◈</span><b>MOD YOUR RUN</b></div><div><span>⚡</span><b>PURE CHAOS</b></div></div>
+        <button id="start-button" class="primary-button"><span>DEPLOY</span><b>↗</b></button>
+        <div class="controls-hint"><span>WASD / ARROWS</span><i>MOVE</i><span>AUTO-FIRE</span><i>✦</i></div>
+        <div class="mod-line"><span class="mod-icon">◈</span><span><b>MOD INSTALLED:</b> OVERDRIVE <small>+25% attack speed</small></span><span class="mod-on">● ONLINE</span></div>
+      </div>
+    </section>
+    <div id="levelup" class="overlay hidden"><div class="upgrade-panel"><div class="eyebrow"><span></span> SIGNAL EVOLUTION</div><h2>CHOOSE YOUR<br><span>UPGRADE</span></h2><p>SYNC LEVEL UP · SELECT ONE PROTOCOL</p><div id="upgrade-options" class="upgrade-options"></div><button id="skip-upgrade" class="text-button">SKIP EVOLUTION <span>→</span></button></div></div>
+    <div id="pause-overlay" class="overlay hidden"><div class="pause-panel"><div class="eyebrow"><span></span> SYSTEM PAUSED</div><h2>TAKE A<br><span>BREATHER.</span></h2><p>Your run is saved in this session.</p><button id="resume-button" class="primary-button"><span>BACK TO IT</span><b>↗</b></button><button id="quit-button" class="text-button">END RUN</button></div></div>
+    <div id="gameover" class="overlay hidden"><div class="pause-panel"><div class="eyebrow danger"><span></span> SIGNAL LOST</div><h2>RUN<br><span>TERMINATED.</span></h2><p id="run-summary">You survived 00:00 and eliminated 0 enemies.</p><button id="retry-button" class="primary-button"><span>REBOOT RUN</span><b>↻</b></button></div></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
